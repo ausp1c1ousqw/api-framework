@@ -1,0 +1,36 @@
+{
+  "name": "@sergey/api-framework",
+  "version": "1.0.0",
+  "description": "API automation framework built with Supertest, Chai, and Allure",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js"
+    }
+  },
+  "keywords": [
+    "automation",
+    "api",
+    "testing",
+    "supertest",
+    "chai",
+    "allure",
+    "logger"
+  ],
+  "author": "Sergey Chernjavsky",
+  "license": "MIT",
+  "dependencies": {
+    "@sergey/core": "git+https://github.com/ausp1c1ousqw/core-for-frameworks",
+    "@wdio/allure-reporter": "^7.34.0",
+    "chai": "^4.3.7",
+    "lodash-es": "^4.17.21",
+    "supertest": "^6.3.3"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
