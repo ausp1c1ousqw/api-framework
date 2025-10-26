@@ -121,5 +121,16 @@ class Response {
       });
     }, message);
   }
+
+  async expectTimestampToBeRecent(timestamp, toleranceMs = 5000) {
+    const actualTime = new Date(timestamp).getTime();
+    const now = Date.now();
+
+    expect(actualTime).to.be.closeTo(
+      now,
+      toleranceMs,
+      `Expected timestamp "${timestamp}" to be within ${toleranceMs}ms of now`
+    );
+  }
 }
 export default Response;
