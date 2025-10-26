@@ -1,5 +1,8 @@
 import { get } from "lodash-es";
-import { expect } from "chai";
+import chai from "chai";
+import chaiSubset from "chai-subset";
+chai.use(chaiSubset);
+const { expect } = chai;
 import allure from "@wdio/allure-reporter";
 import { logger } from "@sergey/core";
 
@@ -48,6 +51,17 @@ class Response {
 
     await this.performAssertionWithLogging(async () => {
       expect(actualValue).to.equal(expectedValue);
+    }, message);
+  }
+
+  async checkThatBodyContains(expectedObject) {
+    const actualBody = this.res.body;
+    const message = `Checking if response body includes expected object
+      actual: ${JSON.stringify(actualBody, null, 2)}
+      expected: ${JSON.stringify(expectedObject, null, 2)}`;
+
+    await this.performAssertionWithLogging(async () => {
+      expect(actualBody).to.containSubset(expectedObject);
     }, message);
   }
 
