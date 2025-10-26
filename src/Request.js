@@ -69,6 +69,19 @@ class Request {
     );
   }
 
+  async patch(endpoint, body, headers = {}) {
+    const combinedHeaders = { ...this.headers, ...headers };
+    return await this.performRequestWithLogging(
+      async () => {
+        return this.request.patch(endpoint).set(combinedHeaders).send(body);
+      },
+      "PATCH",
+      endpoint,
+      headers,
+      body
+    );
+  }
+
   async delete(endpoint, headers = {}) {
     const combinedHeaders = { ...this.headers, ...headers };
     return await this.performRequestWithLogging(

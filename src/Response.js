@@ -36,6 +36,7 @@ class Response {
 
   async verifyStatus(status) {
     const logMessage = `Comparing actual status: '${this.res.status}' to expected: '${status}'`;
+
     await this.performAssertionWithLogging(async () => {
       expect(this.res.status).to.equal(status);
     }, logMessage);
@@ -53,6 +54,7 @@ class Response {
   async verifyPropertyIncludes(propertyPath, expectedSubstring) {
     const actualValue = get(this.res.body, propertyPath);
     const message = `Checking if '${propertyPath}' includes '${expectedSubstring}'`;
+
     await this.performAssertionWithLogging(async () => {
       expect(actualValue).to.include(expectedSubstring);
     }, message);
@@ -61,6 +63,7 @@ class Response {
   async verifyPropertyGreaterThan(propertyPath, expectedNumber) {
     const actualValue = get(this.res.body, propertyPath);
     const message = `Checking if '${propertyPath}' (${actualValue}) > ${expectedNumber}`;
+
     await this.performAssertionWithLogging(async () => {
       expect(actualValue).to.be.greaterThan(expectedNumber);
     }, message);
@@ -69,6 +72,7 @@ class Response {
   async verifyPropertyLessThan(propertyPath, expectedNumber) {
     const actualValue = get(this.res.body, propertyPath);
     const message = `Checking that '${propertyPath}' (${actualValue}) < ${expectedNumber}`;
+
     await this.performAssertionWithLogging(async () => {
       expect(actualValue).to.be.lessThan(expectedNumber);
     }, message);
@@ -77,6 +81,7 @@ class Response {
   async verifyPropertyType(propertyPath, expectedType) {
     const actualValue = get(this.res.body, propertyPath);
     const message = `Checking type of '${propertyPath}' is '${expectedType}'`;
+
     await this.performAssertionWithLogging(async () => {
       expect(actualValue).to.be.a(expectedType);
     }, message);
@@ -95,8 +100,6 @@ class Response {
     const message = `Checking that each item in '${arrayPath}' contains keys: [${keys.join(", ")}]`;
 
     await this.performAssertionWithLogging(async () => {
-      expect(array, `Property '${arrayPath}' should exist and be an array`).to.be.an("array");
-
       array.forEach((item) => {
         keys.forEach((key) => {
           expect(item).to.have.property(key);
