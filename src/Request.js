@@ -1,5 +1,4 @@
 import supertest from "supertest";
-import allure from "@wdio/allure-reporter";
 import { logger } from "@sergey/core";
 
 class Request {
@@ -15,20 +14,10 @@ class Request {
     Endpoint: ${endpoint} 
     Headers: ${JSON.stringify(headers, null, 2)}
     Body: ${JSON.stringify(body, null, 2)}`;
-    const allureMessage = `${method} request with endpoint: ${endpoint}`;
-    try {
-      // allure.startStep(allureMessage);
-      logger.info(logMessage);
+    logger.info(logMessage);
 
-      const res = await request();
-
-      // allure.endStep("passed");
-      return new this.responseWrapper(res);
-    } catch (error) {
-      logger.error(error.message);
-      // allure.endStep("failed");
-      throw error;
-    }
+    const res = await request();
+    return new this.responseWrapper(res);
   }
 
   async get(endpoint, headers = {}) {

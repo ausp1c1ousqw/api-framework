@@ -3,7 +3,6 @@ import chai from "chai";
 import chaiSubset from "chai-subset";
 chai.use(chaiSubset);
 const { expect } = chai;
-import allure from "@wdio/allure-reporter";
 import { logger } from "@sergey/core";
 
 class Response {
@@ -17,109 +16,75 @@ class Response {
     Status: ${this.res.status}
     Body: ${JSON.stringify(this.res.body, null, 2)}
     `;
-    const allureMessage = `Status of Response: ${this.res.status}`;
-    // allure.startStep(allureMessage);
     logger.info(logMessage);
   }
 
-  async performAssertionWithLogging(assertion, logMessage) {
-    try {
-      // allure.startStep(logMessage);
-      logger.info(logMessage);
-
-      await assertion();
-
-      // allure.endStep("passed");
-    } catch (error) {
-      logger.error(error.message);
-      // allure.endStep("failed");
-      throw error;
-    }
-  }
-
   async verifyStatus(status) {
-    const logMessage = `Comparing actual status: '${this.res.status}' to expected: '${status}'`;
-
-    await this.performAssertionWithLogging(async () => {
-      expect(this.res.status).to.equal(status);
-    }, logMessage);
+    logger.info(`Comparing actual status: '${this.res.status}' to expected: '${status}'`);
+    expect(this.res.status).to.equal(status);
   }
 
   async verifyPropertyValue(propertyPath, expectedValue) {
     const actualValue = get(this.res.body, propertyPath);
-    const message = `Verifying that property '${propertyPath}' has value '${expectedValue}', actual: '${actualValue}'`;
+    logger.info(
+      `Verifying that property '${propertyPath}' has value '${expectedValue}', actual: '${actualValue}'`
+    );
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualValue).to.equal(expectedValue);
-    }, message);
+    expect(actualValue).to.equal(expectedValue);
   }
 
   async checkThatBodyContains(expectedObject) {
     const actualBody = this.res.body;
-    const message = `Checking if response body includes expected object
+    logger.info(`Checking if response body includes expected object
       actual: ${JSON.stringify(actualBody, null, 2)}
-      expected: ${JSON.stringify(expectedObject, null, 2)}`;
+      expected: ${JSON.stringify(expectedObject, null, 2)}`);
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualBody).to.containSubset(expectedObject);
-    }, message);
+    expect(actualBody).to.containSubset(expectedObject);
   }
 
   async verifyPropertyIncludes(propertyPath, expectedSubstring) {
     const actualValue = get(this.res.body, propertyPath);
-    const message = `Checking if '${propertyPath}' includes '${expectedSubstring}'`;
+    logger.info(`Checking if '${propertyPath}' includes '${expectedSubstring}'`);
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualValue).to.include(expectedSubstring);
-    }, message);
+    expect(actualValue).to.include(expectedSubstring);
   }
 
   async verifyPropertyGreaterThan(propertyPath, expectedNumber) {
     const actualValue = get(this.res.body, propertyPath);
-    const message = `Checking if '${propertyPath}' (${actualValue}) > ${expectedNumber}`;
+    logger.info(`Checking if '${propertyPath}' (${actualValue}) > ${expectedNumber}`);
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualValue).to.be.greaterThan(expectedNumber);
-    }, message);
+    expect(actualValue).to.be.greaterThan(expectedNumber);
   }
 
   async verifyPropertyLessThan(propertyPath, expectedNumber) {
     const actualValue = get(this.res.body, propertyPath);
-    const message = `Checking that '${propertyPath}' (${actualValue}) < ${expectedNumber}`;
+    logger.info(`Checking that '${propertyPath}' (${actualValue}) < ${expectedNumber}`);
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualValue).to.be.lessThan(expectedNumber);
-    }, message);
+    expect(actualValue).to.be.lessThan(expectedNumber);
   }
 
   async verifyPropertyType(propertyPath, expectedType) {
     const actualValue = get(this.res.body, propertyPath);
-    const message = `Checking type of '${propertyPath}' is '${expectedType}'`;
+    logger.info(`Checking type of '${propertyPath}' is '${expectedType}'`);
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualValue).to.be.a(expectedType);
-    }, message);
+    expect(actualValue).to.be.a(expectedType);
   }
   async verifyPropertyExists(propertyPath) {
     const actualValue = get(this.res.body, propertyPath);
-    const message = `Checking that property '${propertyPath}' exists in the response`;
+    logger.info(`Checking that property '${propertyPath}' exists in the response`);
 
-    await this.performAssertionWithLogging(async () => {
-      expect(actualValue).to.not.be.undefined;
-      expect(actualValue).to.not.be.null;
-    }, message);
+    expect(actualValue).to.not.be.undefined;
+    expect(actualValue).to.not.be.null;
   }
   async verifyKeysInArray(arrayPath, keys) {
     const array = get(this.res.body, arrayPath);
-    const message = `Checking that each item in '${arrayPath}' contains keys: [${keys.join(", ")}]`;
+    logger.info(`Checking that each item in '${arrayPath}' contains keys: [${keys.join(", ")}]`);
 
-    await this.performAssertionWithLogging(async () => {
-      array.forEach((item) => {
-        keys.forEach((key) => {
-          expect(item).to.have.property(key);
-        });
+    array.forEach((item) => {
+      keys.forEach((key) => {
+        expect(item).to.have.property(key);
       });
-    }, message);
+    });
   }
 
   async expectTimestampToBeRecent(toleranceMs = 5000) {
